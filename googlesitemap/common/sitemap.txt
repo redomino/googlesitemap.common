@@ -1,0 +1,10 @@
+googlesitemap.common tests
+==========================
+
+Check if the SiteMapCommonView provided by this package implements the ISiteMapView
+
+>>> from googlesitemap.common.sitemap import SiteMapCommonView
+>>> from googlesitemap.common.interfaces import ISiteMapView
+>>> ISiteMapView.implementedBy(SiteMapCommonView)
+True
+

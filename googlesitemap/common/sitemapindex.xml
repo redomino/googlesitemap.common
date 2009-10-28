@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/it/schemas/sitemap/0.9"
+              xmlns:tal="http://xml.zope.org/namespaces/tal">
+   <sitemap tal:repeat="sitemap view/sitemaps">
+      <loc tal:content="sitemap/url">http://www.example.com/sitemap1.xml.gz</loc>
+      <lastmod tal:content="sitemap/maxdate">2004-10-01T18:23:17+00:00</lastmod>
+   </sitemap>
+</sitemapindex>
