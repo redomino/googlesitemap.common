@@ -103,7 +103,7 @@ class SiteMapCommonBaseView(BrowserView):
         for item in catalog_brains:
             yield {
                 'loc': item.getURL(),
-                'lastmod': item.modified.ISO8601(),
+                'lastmod': item.modified.HTML4(),
                 #'changefreq': 'always', # hourly/daily/weekly/monthly/yearly/never
                 #'prioriy': 0.5, # 0.0 to 1.0
             }

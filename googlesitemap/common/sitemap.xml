@@ -6,10 +6,9 @@
                             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 <tal:block repeat="obj view/objects">
-    <url>
+    <url tal:define="lastmod obj/lastmod;">
         <loc tal:content="obj/loc">url</loc>
-        <lastmod tal:condition="obj/lastmod | nothing"
-                 tal:content="obj/lastmod">date modified</lastmod>
+        <lastmod tal:condition="lastmod"> <tal:replace replace="lastmod" /> </lastmod>
         <changefreq tal:condition="obj/changefreq | nothing"
                     tal:content="obj/changefreq">change frequency</changefreq>
         <priority tal:condition="obj/priority | nothing"
