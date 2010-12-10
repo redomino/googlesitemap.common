@@ -23,7 +23,7 @@ def _render_defaultcachekey(fun, self):
                      self.filename,
                     ])
 
-class SiteMapCommonBaseView(BrowserView):
+class SiteMapCommonView(BrowserView):
     """ Base class for build Sitemaps """
     implements(ISiteMapView)
 
