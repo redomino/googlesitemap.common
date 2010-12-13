@@ -36,6 +36,8 @@ def setup_product():
 
     fiveconfigure.debug_mode = True
 
+    import plone.browserlayer
+    zcml.load_config('configure.zcml', plone.browserlayer)
     import googlesitemap.common
     zcml.load_config('configure.zcml', googlesitemap.common)
     fiveconfigure.debug_mode = False
@@ -54,6 +56,7 @@ def setup_product():
     # We may also need to load dependencies, e.g.:
     #   ztc.installPackage('borg.localrole')
 
+    ztc.installPackage('plone.browserlayer')
     ztc.installPackage('googlesitemap.common')
 
 # The order here is important: We first call the (deferred) function
@@ -61,7 +64,7 @@ def setup_product():
 # PloneTestCase set up this product on installation.
 
 setup_product()
-ptc.setupPloneSite(products=['googlesitemap.common',], 
+ptc.setupPloneSite(products=['plone.browserlayer', 'googlesitemap.common',], 
                    extension_profiles=['googlesitemap.common:default'])
 
 

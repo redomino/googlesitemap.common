@@ -8,10 +8,10 @@ from Products.CMFCore.utils import getToolByName
 
 
 
-from googlesitemap.common.tests.base import TestCase
+from googlesitemap.common.tests.base import FunctionalTestCase
 
 
-class SiteMapTestCase(TestCase):
+class SiteMapTestCase(FunctionalTestCase):
     """base test case with convenience methods for all sitemap tests"""
 
     def afterSetUp(self):
@@ -65,8 +65,7 @@ class SiteMapTestCase(TestCase):
     def test_view(self):
         """ If the sitemap class is right """
         from googlesitemap.common.sitemap import SiteMapCommonView
-        sitemap_view = self.portal.restrictedTraverse('@@sitemap.xml.gz')
-        self.assertTrue(isinstance(sitemap_view, SiteMapCommonView))
+        self.assertTrue(isinstance(self.sitemap, SiteMapCommonView))
 
     def test_disabled(self):
         '''

@@ -5,6 +5,8 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="googlesitemap.common">
 
+  <include package="plone.browserlayer" />
+
   <genericsetup:registerProfile
       name="default"
       title="googlesitemap.common"
