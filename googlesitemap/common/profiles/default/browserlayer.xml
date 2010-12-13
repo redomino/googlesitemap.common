@@ -1,0 +1,4 @@
+<layers>
+    <layer name="googlesitemap.common" 
+           interface="googlesitemap.common.interfaces.ISitemapLayer" />
+</layers>

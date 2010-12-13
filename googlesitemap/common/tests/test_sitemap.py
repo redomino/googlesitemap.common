@@ -6,14 +6,12 @@ from zope.publisher.interfaces import INotFound
 
 from Products.CMFCore.utils import getToolByName
 
-from Products.PloneTestCase.PloneTestCase import PloneTestCase
-from Products.PloneTestCase.PloneTestCase import setupPloneSite
 
 
-setupPloneSite()
+from googlesitemap.common.tests.base import TestCase
 
 
-class SiteMapTestCase(PloneTestCase):
+class SiteMapTestCase(TestCase):
     """base test case with convenience methods for all sitemap tests"""
 
     def afterSetUp(self):
@@ -63,6 +61,12 @@ class SiteMapTestCase(PloneTestCase):
         xml = unziped.read()
         unziped.close()
         return xml
+
+    def test_view(self):
+        """ If the sitemap class is right """
+        from googlesitemap.common.sitemap import SiteMapCommonView
+        sitemap_view = self.portal.restrictedTraverse('@@sitemap.xml.gz')
+        self.assertTrue(isinstance(sitemap_view, SiteMapCommonView))
 
     def test_disabled(self):
         '''

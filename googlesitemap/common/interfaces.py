@@ -1,6 +1,9 @@
 from zope.interface import Interface
 from zope.interface import Attribute
 
+class ISitemapLayer(Interface):
+    """ Layer interface """
+
 class ISiteMapView(Interface):
     """ Sitemap view """
 
