@@ -7,7 +7,7 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="googlesitemap.cp,,pm"
+      title="googlesitemap.common"
       directory="profiles/default"
       description="Installs the googlesitemap.common package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
