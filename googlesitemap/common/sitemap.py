@@ -107,12 +107,27 @@ class SiteMapCommonView(BrowserView):
         catalog_brains = self._slicecatalogbrains()
 
         for item in catalog_brains:
-            yield {
-                'loc': item.getURL(),
-                'lastmod': item.modified.HTML4(),
-                #'changefreq': 'always', # hourly/daily/weekly/monthly/yearly/never
-                #'prioriy': 0.5, # 0.0 to 1.0
-            }
+            if item.portal_type in ['Image']:
+                yield {
+                    'loc': '%s/view' % item.getURL(),
+                    'lastmod': item.modified.HTML4(),
+                    #'changefreq': 'always', # hourly/daily/weekly/monthly/yearly/never
+                    #'prioriy': 0.5, # 0.0 to 1.0
+                }
+            else:
+                if item.portal_type in ['File']:
+                    yield {
+                        'loc': '%s/view' % item.getURL(),
+                        'lastmod': item.modified.HTML4(),
+                        #'changefreq': 'always', # hourly/daily/weekly/monthly/yearly/never
+                        #'prioriy': 0.5, # 0.0 to 1.0
+                    }
+                yield {
+                    'loc': item.getURL(),
+                    'lastmod': item.modified.HTML4(),
+                    #'changefreq': 'always', # hourly/daily/weekly/monthly/yearly/never
+                    #'prioriy': 0.5, # 0.0 to 1.0
+                }
 
     def _uncachedgenerate(self):
         """ Generates the Gzipped sitemap uncached data """

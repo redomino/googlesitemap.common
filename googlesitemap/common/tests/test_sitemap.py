@@ -173,10 +173,25 @@ class SiteMapTestCase(TestCase):
         self.assertTrue('<loc>%s</loc>' % file_url in xml)
         self.assertTrue('<loc>%s/view</loc>' % file_url in xml)
 
-        # plain images should not be included in sitemaps
+        # plain images should not be included in sitemaps, use sitemap for images!
         image_url = self.image1.absolute_url()
         self.assertFalse('<loc>%s</loc>' % image_url in xml)
         self.assertTrue('<loc>%s/view</loc>' % image_url in xml)
+
+    def test_lastmod(self):
+        """ 
+            Seems to be better having spaces in lastmod.
+            It is undocumented but it seems better this format
+              <lastmod> DATE </lastmod>  
+            instead of:
+              <lastmod>DATE</lastmod>  
+
+            DATE should be in ZULU time format ('2010-12-14T10:53:21Z')
+        """
+        xml = self.uncompress(self.sitemap())
+        zulu_time = self.image1.modified().HTML4()
+        self.assertTrue('<lastmod> %s </lastmod>' % zulu_time in xml)
+        self.assertFalse('<lastmod>%s</lastmod>' % zulu_time in xml)
 
 
 def test_suite():
