@@ -40,6 +40,8 @@ def setup_product():
     zcml.load_config('configure.zcml', plone.browserlayer)
     import googlesitemap.common
     zcml.load_config('configure.zcml', googlesitemap.common)
+    import googlesitemap.common.tests
+    zcml.load_config('testing.zcml', googlesitemap.common.tests)
     fiveconfigure.debug_mode = False
 
     # fix important, we avoid an error on setupPloneSite
@@ -64,8 +66,7 @@ def setup_product():
 # PloneTestCase set up this product on installation.
 
 setup_product()
-ptc.setupPloneSite(products=['plone.browserlayer', 'googlesitemap.common',], 
-                   extension_profiles=['googlesitemap.common:default'])
+ptc.setupPloneSite(products=['googlesitemap.common',],) 
 
 
 class TestCase(ptc.PloneTestCase):

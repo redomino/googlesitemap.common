@@ -6,18 +6,16 @@ from zope.publisher.interfaces import INotFound
 
 from Products.CMFCore.utils import getToolByName
 
+from googlesitemap.common.tests.base import TestCase
 
 
-from googlesitemap.common.tests.base import FunctionalTestCase
-
-
-class SiteMapTestCase(FunctionalTestCase):
+class SiteMapTestCase(TestCase):
     """base test case with convenience methods for all sitemap tests"""
 
     def afterSetUp(self):
         super(SiteMapTestCase, self).afterSetUp()
         self.sitemap = getMultiAdapter((self.portal, self.portal.REQUEST),
-                                       name='sitemap.xml.gz')
+                                       name='sitemapindex.xml.gz')
         self.wftool = getToolByName(self.portal, 'portal_workflow')
 
         # we need to explizitly set a workflow cause we can't rely on the
@@ -62,9 +60,19 @@ class SiteMapTestCase(FunctionalTestCase):
         unziped.close()
         return xml
 
+    def test_layers(self):
+        """ Browser layers setup """
+        from googlesitemap.common.interfaces import ISitemapLayer
+
+        from plone.browserlayer.utils import registered_layers
+        # our layer is correctly applied
+        self.assertTrue(ISitemapLayer in registered_layers())
+
     def test_view(self):
         """ If the sitemap class is right """
         from googlesitemap.common.sitemap import SiteMapCommonView
+        # this test fails, we need to fix the tests setup
+        # I've created a fake testing.zcml to fix this
         self.assertTrue(isinstance(self.sitemap, SiteMapCommonView))
 
     def test_disabled(self):

@@ -15,13 +15,18 @@ from Products.CMFCore.utils import getToolByName
 
 from googlesitemap.common.interfaces import ISiteMapView
 
+
 def _render_defaultcachekey(fun, self):
-    # Cache by filename and time
+    # Cache by filename
+    mtool = getToolByName(self.context, 'portal_membership')
+    if not mtool.isAnonymousUser():
+        raise ram.DontCache
+
     url_tool = getToolByName(self.context, 'portal_url')
-    return "/".join([url_tool(),
-                     str(self.index),
-                     self.filename,
-                    ])
+    catalog = getToolByName(self.context, 'portal_catalog')
+    counter = catalog.getCounter()
+    return '%s/%s/%s/%s' % (url_tool(), self.filename, counter, str(self.index))
+
 
 class SiteMapCommonView(BrowserView):
     """ Base class for build Sitemaps """
@@ -69,7 +74,8 @@ class SiteMapCommonView(BrowserView):
             url = '%s/%s?index=%d' % (self.portal_url(), self.filename, index)
             yield {'maxdate':maxdate, 'url':url}
 
-    @memoize
+# TODO: re-enable memoize without breaking tests
+#    @memoize
     def _catalogbrains(self):
         """Returns the data to create the sitemap. Max items = 1000 * maxlen using sitemap indexes.
            maxlen depends on the specific sitemap (standard sitemap, video, news, etc).

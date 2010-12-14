@@ -1,0 +1,13 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="googlesitemap.common">
+
+  <browser:page
+      name="sitemapindex.xml.gz"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class="..sitemap.SiteMapCommonView"
+      permission="zope2.Public"
+     />
+
+</configure>
