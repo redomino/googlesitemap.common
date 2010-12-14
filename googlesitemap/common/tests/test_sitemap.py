@@ -14,8 +14,6 @@ class SiteMapTestCase(TestCase):
 
     def afterSetUp(self):
         super(SiteMapTestCase, self).afterSetUp()
-        self.sitemap = getMultiAdapter((self.portal, self.portal.REQUEST),
-                                       name='sitemapindex.xml.gz')
         self.wftool = getToolByName(self.portal, 'portal_workflow')
 
         # we need to explizitly set a workflow cause we can't rely on the
@@ -58,6 +56,11 @@ class SiteMapTestCase(TestCase):
         self.image1 = self.portal.image1
 
         self.logout()
+
+    @property
+    def sitemap(self):
+        return getMultiAdapter((self.portal, self.portal.REQUEST),
+                               name='sitemapindex.xml.gz')
         
     def uncompress(self, sitemapdata):
         sio = StringIO(sitemapdata)

@@ -74,8 +74,7 @@ class SiteMapCommonView(BrowserView):
             url = '%s/%s?index=%d' % (self.portal_url(), self.filename, index)
             yield {'maxdate':maxdate, 'url':url}
 
-# TODO: re-enable memoize without breaking tests
-#    @memoize
+    @memoize
     def _catalogbrains(self):
         """Returns the data to create the sitemap. Max items = 1000 * maxlen using sitemap indexes.
            maxlen depends on the specific sitemap (standard sitemap, video, news, etc).
