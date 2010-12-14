@@ -51,6 +51,12 @@ class SiteMapTestCase(TestCase):
         self.wftool.doActionFor(pending, 'submit')
         self.assertTrue('pending' == self.wftool.getInfoFor(pending,
                                                             'review_state'))
+
+        self.portal.invokeFactory(id='file1', type_name='File')
+        self.file1 = self.portal.file1
+        self.portal.invokeFactory(id='image1', type_name='Image')
+        self.image1 = self.portal.image1
+
         self.logout()
         
     def uncompress(self, sitemapdata):
@@ -155,6 +161,22 @@ class SiteMapTestCase(TestCase):
 
         xml = self.uncompress(self.sitemap())
         self.assertFalse('<loc>http://nohost/plone/published</loc>' in xml)        
+
+    def test_image_file(self):
+        """ Image and files are handled correctly? """
+        xml = self.uncompress(self.sitemap())
+        self.assertTrue(self.image1.absolute_url() in xml)
+        self.assertTrue(self.file1.absolute_url() in xml)
+
+        # both file and file/view in sitemap
+        file_url = self.file1.absolute_url()
+        self.assertTrue('<loc>%s</loc>' % file_url in xml)
+        self.assertTrue('<loc>%s/view</loc>' % file_url in xml)
+
+        # plain images should not be included in sitemaps
+        image_url = self.image1.absolute_url()
+        self.assertFalse('<loc>%s</loc>' % image_url in xml)
+        self.assertTrue('<loc>%s/view</loc>' % image_url in xml)
 
 
 def test_suite():
