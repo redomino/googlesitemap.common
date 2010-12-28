@@ -14,6 +14,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 
 from googlesitemap.common.interfaces import ISiteMapView
+from googlesitemap.common import config
 
 
 def _render_defaultcachekey(fun, self):
@@ -42,7 +43,7 @@ class SiteMapCommonView(BrowserView):
 
     @property
     def maxlen(self):
-        return 50000
+        return config.MAXLEN
 
     @property
     def query_dict(self):
@@ -74,7 +75,8 @@ class SiteMapCommonView(BrowserView):
             url = '%s/%s?index=%d' % (self.portal_url(), self.filename, index)
             yield {'maxdate':maxdate, 'url':url}
 
-    @memoize
+# TODO: re-enable memoize without breaking tests
+#    @memoize
     def _catalogbrains(self):
         """Returns the data to create the sitemap. Max items = 1000 * maxlen using sitemap indexes.
            maxlen depends on the specific sitemap (standard sitemap, video, news, etc).

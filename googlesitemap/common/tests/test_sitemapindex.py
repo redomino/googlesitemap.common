@@ -2,21 +2,25 @@ from gzip import GzipFile
 from StringIO import StringIO
 
 from zope.component import getMultiAdapter
-from zope.publisher.interfaces import INotFound
+from Products.Five.testbrowser import Browser
+from urllib2 import HTTPError
 
 from Products.CMFCore.utils import getToolByName
 
-from googlesitemap.common.tests.base import TestCase
+from googlesitemap.common.tests.base import FunctionalTestCase
 
-
-class SiteMapTestCase(TestCase):
-    """base test case with convenience methods for all sitemap tests"""
+class SiteMapIndexTestCase(FunctionalTestCase):
+    """base test case with convenience methods for testing the sitemap index"""
 
     def afterSetUp(self):
-        super(SiteMapTestCase, self).afterSetUp()
+        super(SiteMapIndexTestCase, self).afterSetUp()
+
         self.sitemap = getMultiAdapter((self.portal, self.portal.REQUEST),
                                        name='sitemapindex.xml.gz')
         self.wftool = getToolByName(self.portal, 'portal_workflow')
+
+        
+        self.portal.manage_delObjects()
 
         # we need to explizitly set a workflow cause we can't rely on the
         # test environment.
@@ -31,28 +35,16 @@ class SiteMapTestCase(TestCase):
             self.portal, 'portal_properties').site_properties
         self.site_properties.manage_changeProperties(enable_sitemap=True)
 
-        #setup private content that isn't accessible for anonymous
-        self.loginAsPortalOwner()
-        self.portal.invokeFactory(id='private', type_name='Document')
-        private = self.portal.private
-        self.assertTrue('private' == self.wftool.getInfoFor(private,
-                                                            'review_state'))
-        
-        #setup published content that is accessible for anonymous
-        self.portal.invokeFactory(id='published', type_name='Document')
-        published = self.portal.published
-        self.wftool.doActionFor(published, 'publish')
-        self.assertTrue('published' == self.wftool.getInfoFor(published,
-                                                              'review_state'))
+        #Change maxlen
+        from googlesitemap.common import config
+        config.MAXLEN = 5
 
-        #setup pending content that is accessible for anonymous
-        self.portal.invokeFactory(id='pending', type_name='Document')
-        pending = self.portal.pending
-        self.wftool.doActionFor(pending, 'submit')
-        self.assertTrue('pending' == self.wftool.getInfoFor(pending,
-                                                            'review_state'))
+        self.loginAsPortalOwner()
+
         self.logout()
-        
+        self.browser = Browser()
+
+
     def uncompress(self, sitemapdata):
         sio = StringIO(sitemapdata)
         unziped = GzipFile(fileobj=sio)
@@ -60,7 +52,50 @@ class SiteMapTestCase(TestCase):
         unziped.close()
         return xml
 
-# TODO
+    def test_maxlen(self):
+        self.assertTrue(5 == self.sitemap.maxlen)
+
+    def test_link(self):
+        xml = self.uncompress(self.sitemap())
+        self.assertTrue('?index=0' in xml)
+        self.assertTrue('?index=1' in xml)
+        self.assertTrue('?index=2' not in xml)
+
+    def test_indextags(self):
+        xml = self.uncompress(self.sitemap())
+        self.assertTrue('<sitemapindex' in xml)
+        self.assertTrue('<sitemap' in xml)
+        self.assertTrue('<lastmod' in xml)
+
+    def test_open_fail(self):
+        self.loginAsAdmin()
+        browser = self.browser
+        self.assertRaises(HTTPError, browser.open, 'http://nohost/plone/sitemapindex.xml.gz?index=2')
+
+    def test_open(self):
+        self.loginAsAdmin()
+        browser = self.browser
+        browser.open('http://nohost/plone/sitemapindex.xml.gz?index=1')
+        xml = self.uncompress(browser.contents)
+
+
+    def loginAsAdmin(self):
+        """ Perform through-the-web login.
+
+        Simulate going to the login form and logging in.
+
+        We use username and password provided by PloneTestCase.
+
+        This sets session cookie for testbrowser.
+        """
+        from Products.PloneTestCase.setup import portal_owner, default_password
+
+        # Go admin
+        browser = self.browser
+        browser.open(self.portal.absolute_url() + "/login_form")
+        browser.getControl(name='__ac_name').value = portal_owner
+        browser.getControl(name='__ac_password').value = default_password
+        browser.getControl(name='submit').click()
 
 
 def test_suite():
