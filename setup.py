@@ -34,5 +34,5 @@ setup(name='googlesitemap.common',
       target = plone
       """,
       setup_requires=["PasteScript"],
-      paster_plugins = ["ZopeSkel"],
+#      paster_plugins = ["ZopeSkel"],
       )
