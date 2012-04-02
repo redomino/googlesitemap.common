@@ -4,7 +4,7 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- added MANIFEST.in [sithmel]
 
 
 1.1 (2012-04-02)
