@@ -17,7 +17,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.3.dev0'
+version = '1.3'
 
 setup(name='googlesitemap.common',
       version=version,

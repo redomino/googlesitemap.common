@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.3 (unreleased)
---------------
+1.3 (2012-05-04)
+----------------
 
 - removed paster plugins [sithmel]
 
